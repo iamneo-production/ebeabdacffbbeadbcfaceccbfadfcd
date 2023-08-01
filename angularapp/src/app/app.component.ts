@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ConvertPipe } from './convert.pipe';
+import { FormGroup,FormControl,Validators } from "@angular/forms";
 
 @Component({
   selector: 'app-root',
@@ -8,25 +7,23 @@ import { ConvertPipe } from './convert.pipe';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'angularapp';
+  title = 'currencyconverter';
+  reactiveForm: FormGroup;
+  amt:number=0;
+  cF:string="";
+  cT:string="";
+  ngOnInit(){
+    this.reactiveForm =new FormGroup({
+      amount: new FormControl(null,Validators.required),
+      currencyFrom :new FormControl(null,Validators.required),
+      currencyTo :new FormControl(null,Validators.required)
+    })
+   
+  }
 
-  inputForm = new FormGroup({
-    fromCurrency: new FormControl({ value: '', disabled: false}),
-    toCurrency: new FormControl({ value: '', disabled: false}),
-    amount: new FormControl({ value: '', disabled: false}),
-    submitButton: new FormControl({ value: '', disabled: false}),
-    resValue: new FormControl({ value: '', disabled: false}),
-  })
-  currency = [
-    { "id": "USD", "value": 1.126735 },
-    { "id": "GBP", "value": 0.876893 },
-    { "id": "INR", "value": 79.677056 },
-  ];
-
-  submitButton() {
-    let val = new ConvertPipe().transform(this.inputForm.value.fromCurrency,
-      this.inputForm.value.toCurrency, this.inputForm.value.amount);
-      const valStr = String(val) + '.00';
-    this.inputForm.value.resValue= valStr;
+  showResult(){
+    this.amt=this.reactiveForm.get('amount').value;
+    this.cF=this.reactiveForm.get('currencyFrom').value;
+    this.cT=this.reactiveForm.get('currencyTo').value;
   }
 }
